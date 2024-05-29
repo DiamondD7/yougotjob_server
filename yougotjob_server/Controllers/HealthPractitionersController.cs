@@ -79,10 +79,12 @@ namespace yougotjob_server.Controllers
 
                 var newHealthPractitioner = new HealthPractitioners();
                 newHealthPractitioner.FullName = hp.FullName;
+                newHealthPractitioner.RegistrationNumber = hp.RegistrationNumber;
                 newHealthPractitioner.EmailAddress = hp.EmailAddress;
-                newHealthPractitioner.Age = hp.Age;
+                /*newHealthPractitioner.Age = hp.Age;*/
                 newHealthPractitioner.Certifications = hp.Certifications;
                 newHealthPractitioner.DOB = hp.DOB;
+                newHealthPractitioner.Role = hp.Role;
                 newHealthPractitioner.EmailRecovery = hp.EmailRecovery;
                 newHealthPractitioner.Mobile = hp.Mobile;
                 newHealthPractitioner.MobileRecovery = hp.MobileRecovery;

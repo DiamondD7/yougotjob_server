@@ -14,7 +14,7 @@ namespace yougotjob_server.Models
         public string UserPassword { get; set; }
         public string Mobile { get; set; }
         public string MobileRecovery { get; set; }
-        public string Role { get; set; } = "Patient";
+        public string Role { get; set; }
         public string HomeAddress { get; set; }
         public string Country { get; set; }
         public List<EmergencyContact> EmergencyContacts { get; set; } = new List<EmergencyContact>();

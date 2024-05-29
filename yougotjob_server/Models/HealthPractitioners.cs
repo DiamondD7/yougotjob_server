@@ -6,13 +6,14 @@ namespace yougotjob_server.Models
     {
         [Key]
         public int Id { get; set; }
+        public string RegistrationNumber { get; set; }
         public string FullName { get; set; }
         public string Mobile { get; set; }
         public string MobileRecovery { get; set; }
         public string EmailAddress { get; set; }
         public string EmailRecovery { get; set; }
         public string UserPassword { get; set; }
-        public string Role { get; set; } = "Health Practitioner";
+        public string Role { get; set; }
         public List<Certifications> Certifications { get; set; } = new List<Certifications>();
         public DateTime DOB { get; set; }
         public int Age
@@ -28,7 +29,8 @@ namespace yougotjob_server.Models
                 }
                 return age;
             }
-            set { throw new InvalidOperationException("Age property is read-only."); }
+            set { }
         }
+
     }
 }
