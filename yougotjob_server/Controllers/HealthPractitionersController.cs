@@ -52,15 +52,32 @@ namespace yougotjob_server.Controllers
         {
             var hashedPassword = HashPassword(hp.UserPassword);
             var loginEmail = await _appDbContext.HealthPractitionersTable.FirstOrDefaultAsync(x => x.EmailAddress == hp.EmailAddress);
+            if (loginEmail == null || loginEmail.UserPassword == null)
+            {
+                return NotFound(new { returnStatus = new { status = false, code = "Error 404", message = "Invalid email/password" } });
+            }
             var loginUser = loginEmail.UserPassword == hashedPassword;
 
-            if(loginEmail == null || loginUser == false)
+            if (loginUser == false)
             {
-                return NotFound(false);
+                return NotFound(new { returnStatus = new { status = false, code = "404", message = "Invalid email/password" } });
             }
 
-            return loginEmail;
+            return Ok(new{ returnStatus = new { userDetails = loginEmail, code = "200", status = true, message = "successfully logged" } });
 
+        }
+
+        [HttpPost]
+        [ActionName("CheckEmailValidation")]
+        public async Task<ActionResult<HealthPractitioners>> CheckEmailValidation(HealthPractitioners hp)
+        {
+            var checkEmail = await _appDbContext.HealthPractitionersTable.FirstOrDefaultAsync(x => x.EmailAddress == hp.EmailAddress);
+            if(checkEmail != null)
+            {
+                return NotFound(new { returnStatus = new { status = false, code = "400", message = "Email has already been used" } });
+            }
+
+            return Ok(new { returnStatus = new { status = true, code = "200", message = "Success" } });
         }
 
         [HttpPost]
@@ -73,7 +90,7 @@ namespace yougotjob_server.Controllers
 
                 if(findExistingEmailUser != null)
                 {
-                    return BadRequest(new { error = new { code = "Error 404", message = "Email is already taken" } });
+                    return BadRequest(new { returnStatus = new { status=false,code = "404", message = "Email is already taken" } });
                 }
                 var hashedPass = HashPassword(hp.UserPassword);
 
@@ -92,7 +109,7 @@ namespace yougotjob_server.Controllers
 
                 _appDbContext.HealthPractitionersTable.Add(newHealthPractitioner);
                 await _appDbContext.SaveChangesAsync();
-                return Ok();
+                return Ok(new { returnStatus = new { status = true, code = "200", message = "Success" } });
             }
             catch(Exception ex)
             {
