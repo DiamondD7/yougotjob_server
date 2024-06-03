@@ -68,6 +68,19 @@ namespace yougotjob_server.Controllers
         }
 
         [HttpPost]
+        [ActionName("CheckRegistrationNumber")]
+        public async Task<ActionResult<HealthPractitioners>> CheckRegistrationNumber(HealthPractitioners hp)
+        {
+            var findRegistrationNumber = await _appDbContext.HealthPractitionersTable.FirstOrDefaultAsync(x => x.RegistrationNumber == hp.RegistrationNumber);
+            if(findRegistrationNumber != null)
+            {
+                return BadRequest(new { returnStatus = new { code = "404", message = "Registration is already taken", status = false } });
+            }
+
+            return Ok(new { returnStatus = new { code = "202", message = "Registration is available", status = true } });
+        }
+
+        [HttpPost]
         [ActionName("AddHealthPractitionerData")]
         public async Task<ActionResult<HealthPractitioners>> AddHealthPractitionerData(HealthPractitioners hp)
         {
