@@ -68,19 +68,6 @@ namespace yougotjob_server.Controllers
         }
 
         [HttpPost]
-        [ActionName("CheckEmailValidation")]
-        public async Task<ActionResult<HealthPractitioners>> CheckEmailValidation(HealthPractitioners hp)
-        {
-            var checkEmail = await _appDbContext.HealthPractitionersTable.FirstOrDefaultAsync(x => x.EmailAddress == hp.EmailAddress);
-            if(checkEmail != null)
-            {
-                return NotFound(new { returnStatus = new { status = false, code = "400", message = "Email has already been used" } });
-            }
-
-            return Ok(new { returnStatus = new { status = true, code = "200", message = "Success" } });
-        }
-
-        [HttpPost]
         [ActionName("AddHealthPractitionerData")]
         public async Task<ActionResult<HealthPractitioners>> AddHealthPractitionerData(HealthPractitioners hp)
         {
@@ -115,6 +102,20 @@ namespace yougotjob_server.Controllers
             {
                 throw;
             }
+        }
+
+        [HttpDelete("{id}")]
+        [ActionName("DeleteHealthPractitionerData")]
+        public async Task<ActionResult<HealthPractitioners>> DeleteHealthPractitionerData(int id)
+        {
+            var findUser = await _appDbContext.HealthPractitionersTable.FindAsync(id);
+            if(findUser == null)
+            {
+                return BadRequest(new { returnStatus = new {code="404", message="Invalid parameters", status = false} });
+            }
+            _appDbContext.HealthPractitionersTable.Remove(findUser);
+            await _appDbContext.SaveChangesAsync();
+            return Ok(new { returnStatus = new {code="200", message="Successful request", status = true} });
         }
 
         public string HashPassword(string password)
